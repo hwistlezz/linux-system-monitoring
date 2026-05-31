@@ -28,7 +28,10 @@ Codename:	noble
 ### 확인 명령어
 
 ```bash
+# SSH 설정 파일에서 포트와 root 원격 접속 차단 설정을 확인한다.
 sudo grep -E '^(Port|PermitRootLogin)' /etc/ssh/sshd_config
+
+# sshd가 실제로 20022 포트에서 LISTEN 중인지 확인한다.
 sudo ss -tulnp | grep ssh
 ```
 
@@ -53,7 +56,8 @@ tcp   LISTEN 0      128              [::]:20022         [::]:*    users:(("sshd"
 ### 확인 명령어
 
 ```bash
-sudo ufw status verbose
+# UFW 활성화 상태와 허용된 인바운드 포트를 확인한다.
+sudo ufw status verbosesudo ufw status verbose
 ```
 
 ### 확인 결과
@@ -89,9 +93,12 @@ To                         Action      From
 ### 확인 명령어
 
 ```bash
+# 각 계정이 어떤 그룹에 포함되어 있는지 확인한다.
 id agent-admin
 id agent-dev
 id agent-test
+
+# 주요 디렉토리의 소유자, 그룹, 권한을 확인한다.
 sudo ls -ld /home/agent-admin
 sudo ls -ld /home/agent-admin/agent-app
 sudo ls -ld /home/agent-admin/agent-app/upload_files
