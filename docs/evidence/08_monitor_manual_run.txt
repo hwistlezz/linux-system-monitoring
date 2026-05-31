@@ -1,0 +1,18 @@
+==================================================
+SYSTEM MONITOR RESULT
+==================================================
+
+[HEALTH CHECK]
+Checking process 'agent_app.py'... [OK] (PID: 3641)
+Checking port 15034... [OK]
+
+[FIREWALL CHECK]
+Checking UFW firewall... [OK]
+
+[RESOURCE MONITORING]
+CPU Usage  : 0.2%
+MEM Usage  : 8.5%
+DISK Used  : 1%
+
+
+[INFO] Log appended: /var/log/agent-app/monitor.log

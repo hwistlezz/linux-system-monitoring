@@ -1,0 +1,47 @@
+getfacl: Removing leading '/' from absolute path names
+# file: home/agent-admin
+# owner: agent-admin
+# group: agent-core
+user::rwx
+group::r-x
+group:agent-common:--x
+mask::r-x
+other::---
+
+getfacl: Removing leading '/' from absolute path names
+# file: home/agent-admin/agent-app
+# owner: agent-admin
+# group: agent-core
+user::rwx
+group::r-x
+group:agent-common:--x
+mask::r-x
+other::---
+
+getfacl: Removing leading '/' from absolute path names
+# file: home/agent-admin/agent-app/upload_files
+# owner: agent-admin
+# group: agent-common
+# flags: -s-
+user::rwx
+group::rwx
+other::---
+
+getfacl: Removing leading '/' from absolute path names
+# file: home/agent-admin/agent-app/api_keys
+# owner: agent-admin
+# group: agent-core
+# flags: -s-
+user::rwx
+group::rwx
+other::---
+
+getfacl: Removing leading '/' from absolute path names
+# file: var/log/agent-app
+# owner: agent-admin
+# group: agent-core
+# flags: -s-
+user::rwx
+group::rwx
+other::---
+

@@ -1,0 +1,1 @@
+-rwxr-x--- 1 agent-dev agent-core 4421 May 31 14:20 /home/agent-admin/agent-app/bin/monitor.sh
