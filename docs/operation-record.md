@@ -3,10 +3,10 @@
 ## 1. 실습 환경
 
 ```text
-Distributor ID:	Ubuntu
-Description:	Ubuntu 24.04.4 LTS
-Release:	24.04
-Codename:	noble
+Distributor ID: Ubuntu
+Description:    Ubuntu 24.04.4 LTS
+Release:        24.04
+Codename:       noble
 ```
 
 - 방화벽 도구: UFW
@@ -31,7 +31,7 @@ Codename:	noble
 # SSH 설정 파일에서 포트와 root 원격 접속 차단 설정을 확인한다.
 sudo grep -E '^(Port|PermitRootLogin)' /etc/ssh/sshd_config
 
-# sshd가 실제로 20022 포트에서 LISTEN 중인지 확인한다.
+# sshd가 실제로 20022 포트에서 LISTEN 상태인지 확인한다.
 sudo ss -tulnp | grep ssh
 ```
 
@@ -40,8 +40,8 @@ sudo ss -tulnp | grep ssh
 ```text
 Port 20022
 PermitRootLogin no
-tcp   LISTEN 0      128           0.0.0.0:20022      0.0.0.0:*    users:(("sshd",pid=4603,fd=3))           
-tcp   LISTEN 0      128              [::]:20022         [::]:*    users:(("sshd",pid=4603,fd=4))           
+tcp   LISTEN 0      128           0.0.0.0:20022      0.0.0.0:*    users:(("sshd",pid=4603,fd=3))
+tcp   LISTEN 0      128              [::]:20022         [::]:*    users:(("sshd",pid=4603,fd=4))
 ```
 
 ---
@@ -57,7 +57,7 @@ tcp   LISTEN 0      128              [::]:20022         [::]:*    users:(("sshd"
 
 ```bash
 # UFW 활성화 상태와 허용된 인바운드 포트를 확인한다.
-sudo ufw status verbosesudo ufw status verbose
+sudo ufw status verbose
 ```
 
 ### 확인 결과
@@ -70,11 +70,10 @@ New profiles: skip
 
 To                         Action      From
 --                         ------      ----
-20022/tcp                  ALLOW IN    Anywhere                  
-15034/tcp                  ALLOW IN    Anywhere                  
-20022/tcp (v6)             ALLOW IN    Anywhere (v6)             
-15034/tcp (v6)             ALLOW IN    Anywhere (v6)             
-
+20022/tcp                  ALLOW IN    Anywhere
+15034/tcp                  ALLOW IN    Anywhere
+20022/tcp (v6)             ALLOW IN    Anywhere (v6)
+15034/tcp (v6)             ALLOW IN    Anywhere (v6)
 ```
 
 ---
@@ -118,6 +117,17 @@ drwxr-x---+ 5 agent-admin agent-core 4096 May 31 14:17 /home/agent-admin/agent-a
 drwxrws--- 2 agent-admin agent-common 4096 May 31 14:16 /home/agent-admin/agent-app/upload_files
 drwxrws--- 2 agent-admin agent-core 4096 May 31 14:16 /home/agent-admin/agent-app/api_keys
 drwxrws--- 2 agent-admin agent-core 4096 May 31 14:21 /var/log/agent-app
+```
+
+### ACL 확인 명령어
+
+```bash
+# agent-common과 agent-core 그룹의 세부 접근 권한을 확인한다.
+sudo getfacl /home/agent-admin
+sudo getfacl /home/agent-admin/agent-app
+sudo getfacl /home/agent-admin/agent-app/upload_files
+sudo getfacl /home/agent-admin/agent-app/api_keys
+sudo getfacl /var/log/agent-app
 ```
 
 ### ACL 확인 결과
@@ -169,7 +179,6 @@ getfacl: Removing leading '/' from absolute path names
 user::rwx
 group::rwx
 other::---
-
 ```
 
 ---
@@ -183,6 +192,16 @@ other::---
 - agent-admin 일반 계정으로 애플리케이션을 실행했다.
 - Boot Sequence 5단계가 모두 OK인지 확인했다.
 - Agent READY 출력과 15034 포트 LISTEN 상태를 확인했다.
+
+### 확인 명령어
+
+```bash
+# 애플리케이션 부팅 로그에서 Boot Sequence 5단계와 Agent READY 출력을 확인한다.
+sudo cat /var/log/agent-app/agent_app_boot.log
+
+# 애플리케이션이 15034 포트에서 LISTEN 상태인지 확인한다.
+ss -tulnp | grep 15034
+```
 
 ### 확인 결과
 
@@ -201,7 +220,7 @@ Starting Agent Boot Sequence...
 ------------------------------------------------------------
 All Boot Checks Passed!
 Agent READY
-tcp   LISTEN 0      5             0.0.0.0:15034      0.0.0.0:*          
+tcp   LISTEN 0      5             0.0.0.0:15034      0.0.0.0:*
 ```
 
 ---
@@ -214,10 +233,24 @@ tcp   LISTEN 0      5             0.0.0.0:15034      0.0.0.0:*
 /home/agent-admin/agent-app/bin/monitor.sh
 ```
 
-### 권한 확인
+### 권한 확인 명령어
+
+```bash
+# monitor.sh의 소유자, 그룹, 실행 권한을 확인한다.
+sudo ls -l /home/agent-admin/agent-app/bin/monitor.sh
+```
+
+### 권한 확인 결과
 
 ```text
 -rwxr-x--- 1 agent-dev agent-core 4421 May 31 14:20 /home/agent-admin/agent-app/bin/monitor.sh
+```
+
+### 수동 실행 명령어
+
+```bash
+# agent-admin 계정으로 monitor.sh를 직접 실행해 정상 동작 여부를 확인한다.
+sudo -u agent-admin /home/agent-admin/agent-app/bin/monitor.sh
 ```
 
 ### 수동 실행 결과
@@ -239,8 +272,14 @@ CPU Usage  : 0.2%
 MEM Usage  : 8.5%
 DISK Used  : 1%
 
-
 [INFO] Log appended: /var/log/agent-app/monitor.log
+```
+
+### 로그 확인 명령어
+
+```bash
+# monitor.log에 지정된 형식으로 로그가 누적되는지 확인한다.
+sudo tail -n 5 /var/log/agent-app/monitor.log
 ```
 
 ### 로그 기록 확인
@@ -261,6 +300,16 @@ DISK Used  : 1%
 
 - agent-admin 계정의 crontab에 monitor.sh를 매분 실행하도록 등록했다.
 - 1분 뒤 /var/log/agent-app/monitor.log에 로그가 자동으로 추가되는 것을 확인했다.
+
+### 확인 명령어
+
+```bash
+# agent-admin 계정의 crontab에 monitor.sh가 매분 실행되도록 등록되었는지 확인한다.
+sudo crontab -u agent-admin -l
+
+# monitor.log에 로그가 자동으로 누적되는지 확인한다.
+sudo tail -n 10 /var/log/agent-app/monitor.log
+```
 
 ### 확인 결과
 
